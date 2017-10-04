@@ -1,0 +1,12 @@
+E:\IB\ASXData\ASXData\bin\Debug\ASXData.exe.config
+E:\IB\ASXData\ASXData\obj\Debug\ASXData.csprojResolveAssemblyReference.cache
+E:\IB\ASXData\ASXData\bin\Debug\ASXData.exe
+E:\IB\ASXData\ASXData\bin\Debug\ASXData.pdb
+E:\IB\ASXData\ASXData\obj\Debug\ASXData.exe
+E:\IB\ASXData\ASXData\obj\Debug\ASXData.pdb
+H:\IB\ASXData\ASXData\bin\Debug\ASXData.exe.config
+H:\IB\ASXData\ASXData\obj\Debug\ASXData.exe
+H:\IB\ASXData\ASXData\obj\Debug\ASXData.pdb
+H:\IB\ASXData\ASXData\bin\Debug\ASXData.exe
+H:\IB\ASXData\ASXData\bin\Debug\ASXData.pdb
+H:\IB\ASXData\ASXData\obj\Debug\ASXData.csprojResolveAssemblyReference.cache
