@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.FileIO;
 
 namespace ASXData
 {
@@ -121,8 +122,9 @@ namespace ASXData
             
 
             //create assetHistory
-            File.Delete("c:\\AssetsZ9.csv");
-            TextWriter tw2 = new StreamWriter("c:\\AssetsZ9.csv", true);
+            string ZorroPath = ConfigurationManager.AppSettings["ZorroPath"];
+            File.Delete(ZorroPath + "\\history\\AssetsZ9.csv");
+            TextWriter tw2 = new StreamWriter(ZorroPath + "\\history\\AssetsZ9.csv", true);
             tw2.WriteLine("Name,Price,Spread,RollLong,RollShort,PIP,PIPCost,MarginCost,Leverage,LotAmount,Commission,Symbol,Type");
             foreach (var ticker  in ProcessOnlyListSplit)
             {
@@ -132,6 +134,9 @@ namespace ASXData
 
             }
             tw2.Close();
+
+            //copy all processed files
+            FileSystem.CopyDirectory(ASXProcessedFilesPath, ZorroPath + "\\ASXProcessed");
 
         }
     }
