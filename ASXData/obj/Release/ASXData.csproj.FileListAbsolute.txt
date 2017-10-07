@@ -7,3 +7,6 @@ E:\IB\ASXData\ASXData\obj\Release\ASXData.csprojResolveAssemblyReference.cache
 H:\IB\ASXData\ASXData\bin\Release\ASXData.exe.config
 H:\IB\ASXData\ASXData\obj\Release\ASXData.exe
 H:\IB\ASXData\ASXData\obj\Release\ASXData.pdb
+H:\IB\ASXData\ASXData\bin\Release\ASXData.exe
+H:\IB\ASXData\ASXData\bin\Release\ASXData.pdb
+H:\IB\ASXData\ASXData\obj\Release\ASXData.csprojResolveAssemblyReference.cache

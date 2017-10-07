@@ -16,6 +16,15 @@ How to USe
 - Run DownloadHistroy
 - Run Z9
 
+13.6% without ITW
+<add key="ProcessOnlyList" value="IVV,NDQ,IXJ,IXI,RDV,VHY,IRU,IJP"/>
+
+25%
+<add key="ProcessOnlyList" value="IVV,NDQ,IXJ,IXI,RDV,VHY,IRU,IJP,ITW"/>
+
+24.4%
+<add key="ProcessOnlyList" value="IVV,NDQ,IXJ,IXP,IXI,RDV,VHY,IRU,IJP,ITW"/>
+
 Z9 11.9%
 IVV,NDQ,IXJ,IXP,IXI,RDV,VHY,IOZ,IRU,IJP
 
