@@ -23,7 +23,9 @@ namespace ASXData
             string ASXDailyFilesPath = ConfigurationManager.AppSettings["ASXDailyFilesPath"];
             string ASXProcessedFilesPath = ConfigurationManager.AppSettings["ASXProcessedFilesPath"];
             string ProcessOnlyList = ConfigurationManager.AppSettings["ProcessOnlyList"];
+            string PerformanceOnlyList = ConfigurationManager.AppSettings["PerformanceOnlyList"];
             ProcessOnlyList = "," + ProcessOnlyList + ",";
+            PerformanceOnlyList = "," + PerformanceOnlyList + ",";
 
             List<string> ASXDailyFilesPathFiles = Directory.EnumerateFiles(ASXDailyFilesPath).OrderByDescending(filename => filename).ToList();
             List<string> ASXProcessedFilesPathFiles = Directory.EnumerateFiles(ASXProcessedFilesPath).OrderBy(filename => filename).ToList();
@@ -96,7 +98,8 @@ namespace ASXData
                         int start = file.LastIndexOf("\\")+1;
                         int end = file.LastIndexOf(".");
                         string name=file.Substring(start, file.Length-start-4);
-                        NotEnoughHistoryList.Add(name);
+                        if(name !="ASXPerformances")
+                            NotEnoughHistoryList.Add(name);
                             
                     }
 
@@ -135,9 +138,116 @@ namespace ASXData
             }
             tw2.Close();
 
+            //calculate performances
+            Dictionary<string, Dictionary<int, PerfPerYear>> dicMain = new Dictionary<string, Dictionary<int, PerfPerYear>>();
+            int currentyear = 0;
+            foreach (var file in ASXDailyFilesPathFiles)
+            {
+
+
+                if (currentyear == 0)
+                {
+                    using (TextFieldParser parserOrig = new TextFieldParser(file))
+                    {
+
+                        parserOrig.TextFieldType = FieldType.Delimited;
+                        parserOrig.SetDelimiters(",");
+                        while (!parserOrig.EndOfData)
+                        {
+                            var lineDest = parserOrig.ReadLine();
+                            var ticker = lineDest.Substring(0, lineDest.IndexOf(','));
+                            var lineDestSplit = lineDest.Replace(ticker + ",", "").Split(',');
+
+                            if (!string.IsNullOrEmpty(ticker))
+                            {
+                                Dictionary<int, PerfPerYear> dicPerf = new Dictionary<int, PerfPerYear>();
+                                PerfPerYear perf = new PerfPerYear();
+                                currentyear = int.Parse(lineDestSplit[0].Substring(0, 4));
+                                perf.ValEnd = double.Parse(lineDestSplit[4]);
+                                perf.ValBegin = 0;
+                                dicPerf.Add(int.Parse(lineDestSplit[0].Substring(0, 4)), perf);
+                                if (PerformanceOnlyList.Contains("," + ticker + ","))
+                                    dicMain.Add(ticker, dicPerf);
+                            }
+                        }
+                    }
+                }
+                else if (file.Substring(file.LastIndexOf('\\')+1, 4) != currentyear.ToString())
+                {
+                    currentyear = int.Parse(file.Substring(file.LastIndexOf('\\')+1, 4));
+                    using (TextFieldParser parserOrig = new TextFieldParser(file))
+                    {
+
+                        parserOrig.TextFieldType = FieldType.Delimited;
+                        parserOrig.SetDelimiters(",");
+                        while (!parserOrig.EndOfData)
+                        {
+                            var lineDest = parserOrig.ReadLine();
+                            var ticker = lineDest.Substring(0, lineDest.IndexOf(','));
+                            var lineDestSplit = lineDest.Replace(ticker + ",", "").Split(',');
+
+                            if (!string.IsNullOrEmpty(ticker))
+                            {
+                                if (dicMain.ContainsKey(ticker))
+                                {
+                                    var dicPerf = dicMain[ticker];
+                                    if (dicPerf.ContainsKey(currentyear + 1))
+                                    {
+                                        var perf = dicPerf[currentyear + 1];
+                                        perf.ValBegin = double.Parse(lineDestSplit[4]);
+                                        perf.PerformancePercent = ((perf.ValEnd - perf.ValBegin)/Math.Abs(perf.ValBegin))*
+                                                                  100;
+
+                                        PerfPerYear perfPrev = new PerfPerYear();
+                                        perfPrev.ValEnd = double.Parse(lineDestSplit[4]);
+                                        perfPrev.ValBegin = 0;
+                                        dicPerf.Add(currentyear, perfPrev);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            File.Delete(ASXProcessedFilesPath + "\\ASXPerformances.csv");
+            TextWriter tw3 = new StreamWriter(ASXProcessedFilesPath + "\\ASXPerformances.csv", true);
+            string header = "";
+            int year = DateTime.Now.Year;
+            for (int i = year; i > 2000; i--)
+                header =header+","+ i.ToString() ;
+            tw3.WriteLine("Name" + header);
+            foreach (var ticker in dicMain)
+            {
+                string line = ticker.Key;
+                for (int i = year; i > 2000; i--)
+                {
+                    if (ticker.Value.ContainsKey(i))
+                        line = line + "," + ticker.Value[i].PerformancePercent.ToString("F");
+                    else
+                        line = line + ",";
+                }
+                tw3.WriteLine(line);
+
+
+            }
+            tw3.Close();
+
+
+
             //copy all processed files
-            FileSystem.CopyDirectory(ASXProcessedFilesPath, ZorroPath + "\\ASXProcessed");
+            FileSystem.CopyDirectory(ASXProcessedFilesPath, ZorroPath + "\\ASXProcessed",true);
 
         }
+    }
+
+    public class PerfPerYear
+    {
+        public double PerformancePercent { get; set; }
+        public double ValBegin { get; set; }
+        public double ValEnd { get; set; }
+
     }
 }

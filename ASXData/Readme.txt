@@ -2,6 +2,7 @@
 ASX Data
 https://www.ing.com.au/pdf/superannuation/Shares_ETFs_LICs.pdf
 https://www.asxhistoricaldata.com/
+http://www.marketindex.com.au/
 
 
 ETF screeners
@@ -15,6 +16,9 @@ How to USe
 - Copy AssetsZ9 to Zorro Folder
 - Run DownloadHistroy
 - Run Z9
+
+20.5%
+<add key="ProcessOnlyList" value="IVV,IXJ,IXI,RDV,VHY,IRU,IJP,ITW,VAP,VTS"/>
 
 13.6% without ITW
 <add key="ProcessOnlyList" value="IVV,NDQ,IXJ,IXI,RDV,VHY,IRU,IJP"/>
