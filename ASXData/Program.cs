@@ -133,7 +133,7 @@ namespace ASXData
             {
                 if (!string.IsNullOrEmpty(ticker))
                     if (!NotInASXList.Contains(ticker) && !NotEnoughHistoryList.Contains(ticker))
-                        tw2.WriteLine(ticker + ",50,0.1,0,0,0.01,0.01,0,1,1,0.2,,0");
+                        tw2.WriteLine(ticker + ",50,0.1,0,0,0.01,0.01,0,1,1,0.2,STOOQ:"+ticker+".AX,0");
 
             }
             tw2.Close();
